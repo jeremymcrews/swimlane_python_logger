@@ -4,8 +4,10 @@ import sys
 
 class loggerWarpper:
     def __init__(self, intergration, logPath):
+        self.intergration = intergration
+        self.logPath = logPath
         self.FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        self.LOG_FILE = r"{}\{}.log".format(intergration, logPath)
+        self.LOG_FILE = r"{}\{}.log".format(self.intergration, self.logPath)
 
     def get_console_handler(self):
        console_handler = logging.StreamHandler(sys.stdout)
@@ -17,8 +19,8 @@ class loggerWarpper:
        file_handler.setFormatter(self.FORMATTER)
        return file_handler
 
-    def get_logger(self, logger_name):
-       logger = logging.getLogger(logger_name)
+    def get_logger(self):
+       logger = logging.getLogger(self.logger_name)
        logger.setLevel(logging.DEBUG) # better to have too much log than not enough
        logger.addHandler(self.get_console_handler())
        logger.addHandler(self.get_file_handler())
