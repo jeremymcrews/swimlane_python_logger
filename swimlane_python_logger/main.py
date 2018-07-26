@@ -7,7 +7,7 @@ class loggerWarpper:
         self.intergration = intergration
         self.logPath = logPath
         self.FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        self.LOG_FILE = r"{}\{}.log".format(self.intergration, self.logPath)
+        self.LOG_FILE = "{}\{}.log".format(self.intergration, self.logPath)
 
     def get_console_handler(self):
        console_handler = logging.StreamHandler(sys.stdout)
