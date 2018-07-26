@@ -20,7 +20,7 @@ class loggerWarpper:
        return file_handler
 
     def get_logger(self):
-       logger = logging.getLogger(self.logger_name)
+       logger = logging.getLogger(self.intergration)
        logger.setLevel(logging.DEBUG) # better to have too much log than not enough
        logger.addHandler(self.get_console_handler())
        logger.addHandler(self.get_file_handler())
