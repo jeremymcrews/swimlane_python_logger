@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="swimlane-python-logger",
-    version="1.0.0",
+    version="1.0.1",
     author="Jeremy m Crews",
     author_email="jeremy.m.crews@gmail.com",
     description="Logger wrapper class for Swimlane Integrations",
