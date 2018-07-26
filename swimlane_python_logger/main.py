@@ -5,7 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 class loggerWarpper:
     def __init__(self, intergration):
         self.FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        self.LOG_FILE = r"D:\SwimlanePython\Production\logs\{}.log".format('SePollLogRythemEventData')
+        self.LOG_FILE = r"D:\SwimlanePython\Production\logs\{}.log".format(intergration)
 
     def get_console_handler(self):
        console_handler = logging.StreamHandler(sys.stdout)
