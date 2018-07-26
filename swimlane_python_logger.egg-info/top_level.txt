@@ -1,1 +1,1 @@
-swimlane-python-logger
+swimlane_python_logger

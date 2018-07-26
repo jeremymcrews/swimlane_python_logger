@@ -2,7 +2,7 @@ Metadata-Version: 2.1
 Name: swimlane-python-logger
 Version: 1.0.0
 Summary: Logger wrapper class for Swimlane Integrations
-Home-page: UNKNOWN
+Home-page: https://github.com/jeremymcrews/swimlane-python-logger
 Author: Jeremy m Crews
 Author-email: jeremy.m.crews@gmail.com
 License: UNKNOWN

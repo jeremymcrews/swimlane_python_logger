@@ -1,7 +1,7 @@
 README.md
 setup.py
-swimlane-python-logger/__init__.py
-swimlane-python-logger/main.py
+swimlane_python_logger/__init__.py
+swimlane_python_logger/main.py
 swimlane_python_logger.egg-info/PKG-INFO
 swimlane_python_logger.egg-info/SOURCES.txt
 swimlane_python_logger.egg-info/dependency_links.txt
