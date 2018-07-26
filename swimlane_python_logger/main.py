@@ -1,11 +1,11 @@
-import logging
 from logging.handlers import TimedRotatingFileHandler
-
+import logging
+import sys
 
 class loggerWarpper:
-    def __init__(self, intergration):
+    def __init__(self, intergration, logPath):
         self.FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        self.LOG_FILE = r"D:\SwimlanePython\Production\logs\{}.log".format(intergration)
+        self.LOG_FILE = r"{}\{}.log".format(intergration, logPath)
 
     def get_console_handler(self):
        console_handler = logging.StreamHandler(sys.stdout)
