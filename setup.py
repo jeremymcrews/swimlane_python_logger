@@ -11,7 +11,7 @@ setuptools.setup(
     description="Logger wrapper class for Swimlane Integrations",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    #url="https://github.com/pypa/sampleproject",
+    url="https://github.com/jeremymcrews/swimlane-python-logger",
     packages=setuptools.find_packages(),
     classifiers=(
         "Programming Language :: Python :: 2",
