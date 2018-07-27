@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="swimlane-python-logger",
-    version="1.0.9",
+    version="1.1.0",
     author="Jeremy m Crews",
     author_email="jeremy.m.crews@gmail.com",
     description="Logger wrapper class for Swimlane Integrations",
@@ -13,6 +13,9 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/jeremymcrews/swimlane_python_logger",
     packages=setuptools.find_packages(),
+    install_requres=[
+        'logmatic-python',
+    ],
     classifiers=(
         "Programming Language :: Python :: 2",
         "License :: OSI Approved :: MIT License",

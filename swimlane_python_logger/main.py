@@ -1,9 +1,11 @@
-from os import path, remove
+from os import path
 import datetime
 import logging
 import logging.config
 import logmatic
 import json
+import socket
+
 
 class integration:
     def __init__(self, integration, logPath, configFile, configPath, logger=None):
@@ -31,17 +33,20 @@ class integration:
         self.configDict['handlers']['info_file_handler']['filename'] = self.logPath
         self.configDict['handlers']['debug_file_handler']['filename'] = self.logPath
         self.configDict['handlers']['notset_file_handler']['filename'] = self.logPath
-        logging.config.dictConfig(self.configDict)
+        #logging.config.dictConfig(self.configDict)
+        handler = logging.FileHandler(self.logPath)
+        handler.setFormatter(logmatic.JsonFormatter(extra={"hostname": socket.gethostname()}))
+        self.logger.addHandler(handler)
 
     def infoLogger(self, message):
         self.logger.info(message)
 
     def errorLogger(self, message, extra=None):
         if extra is not None:
-            self.logger.error(message, exrta=extra, exc_info=False)
+            self.logger.error(message, exrta=extra, exc_info=True)
         else:
-            self.logger.error(message, exc_info=False)
+            self.logger.error(message, exc_info=True)
 
 
 spl = integration("SePollLogRythemEventData", "D:/SwimlanePython/Production/logs/", "config.json", "D:/SwimlanePython/swimlane_python_logger/swimlane_python_logger/")
-spl.errorLogger('error test')
+spl.errorLogger('test')
