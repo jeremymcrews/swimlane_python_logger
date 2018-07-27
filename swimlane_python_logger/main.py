@@ -1,29 +1,47 @@
-from logging.handlers import TimedRotatingFileHandler
+from os import path, remove
+import datetime
 import logging
-import sys
+import logging.config
+import logmatic
+import json
 
-class loggerWarpper:
-    def __init__(self, intergration, logPath):
-        self.intergration = intergration
-        self.logPath = logPath
-        self.FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        self.LOG_FILE = '{}{}.log'.format(self.intergration, self.logPath)
+class integration:
+    def __init__(self, integration, logPath, configFile, configPath, logger=None):
+        self.dateNow = datetime.datetime.now().strftime("%Y-%m-%d")
+        self.integration = integration
+        self.configDict = {}
+        self.configFile = configFile
+        self.configPath = path.join(configPath, self.configFile)
+        self.logger = logger or logging.getLogger(self.integration)
+        self.logPath = path.join(logPath, "{}_{}.log".format(self.integration, self.dateNow))
+        self.checkAndCreateFile()
+        self.loadLoggingConfig()
 
-    def get_console_handler(self):
-       console_handler = logging.StreamHandler(sys.stdout)
-       console_handler.setFormatter(self.FORMATTER)
-       return console_handler
+    def checkAndCreateFile(self):
+        if not path.isfile(self.logPath):
+            f = open(self.logPath, 'a+')
+            f.close()
 
-    def get_file_handler(self):
-       file_handler = TimedRotatingFileHandler(self.LOG_FILE, when='midnight')
-       file_handler.setFormatter(self.FORMATTER)
-       return file_handler
+    def loadLoggingConfig(self):
+        with open(self.configPath, 'r') as configFile:
+            self.configDict = json.load(configFile)
+        self.configDict['handlers']['critical_file_handler']['filename'] = self.logPath
+        self.configDict['handlers']['error_file_handler']['filename'] = self.logPath
+        self.configDict['handlers']['warning_file_handler']['filename'] = self.logPath
+        self.configDict['handlers']['info_file_handler']['filename'] = self.logPath
+        self.configDict['handlers']['debug_file_handler']['filename'] = self.logPath
+        self.configDict['handlers']['notset_file_handler']['filename'] = self.logPath
+        logging.config.dictConfig(self.configDict)
 
-    def get_logger(self):
-       logger = logging.getLogger(self.intergration)
-       logger.setLevel(logging.DEBUG) # better to have too much log than not enough
-       logger.addHandler(self.get_console_handler())
-       logger.addHandler(self.get_file_handler())
-       # with this pattern, it's rarely necessary to propagate the error up to parent
-       logger.propagate = False
-       return logger
+    def infoLogger(self, message):
+        self.logger.info(message)
+
+    def errorLogger(self, message, extra=None):
+        if extra is not None:
+            self.logger.error(message, exrta=extra, exc_info=False)
+        else:
+            self.logger.error(message, exc_info=False)
+
+
+spl = integration("SePollLogRythemEventData", "D:/SwimlanePython/Production/logs/", "config.json", "D:/SwimlanePython/swimlane_python_logger/swimlane_python_logger/")
+spl.errorLogger('error test')
