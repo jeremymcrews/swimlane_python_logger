@@ -3,7 +3,6 @@ import datetime
 import logging
 import logging.config
 import logmatic
-import json
 import socket
 
 
@@ -16,8 +15,14 @@ class integration:
         self.configPath = path.join(configPath, self.configFile)
         self.logger = logger or logging.getLogger(self.integration)
         self.logPath = path.join(logPath, "{}_{}.log".format(self.integration, self.dateNow))
+        self.noExtra = {"hostname": socket.gethostname(), "ipaddress": socket.gethostbyname(socket.gethostname())}
         self.checkAndCreateFile()
         self.loadLoggingConfig()
+
+    def merge_two_dicts(self, x, y):
+        z = x.copy()  # start with x's keys and values
+        z.update(y)  # modifies z with y's keys and values & returns None
+        return z
 
     def checkAndCreateFile(self):
         if not path.isfile(self.logPath):
@@ -25,28 +30,44 @@ class integration:
             f.close()
 
     def loadLoggingConfig(self):
-        with open(self.configPath, 'r') as configFile:
-            self.configDict = json.load(configFile)
-        self.configDict['handlers']['critical_file_handler']['filename'] = self.logPath
-        self.configDict['handlers']['error_file_handler']['filename'] = self.logPath
-        self.configDict['handlers']['warning_file_handler']['filename'] = self.logPath
-        self.configDict['handlers']['info_file_handler']['filename'] = self.logPath
-        self.configDict['handlers']['debug_file_handler']['filename'] = self.logPath
-        self.configDict['handlers']['notset_file_handler']['filename'] = self.logPath
-        #logging.config.dictConfig(self.configDict)
+        fmt = "%(created)f %(msecs)d %(relativeCreated)d %(asctime)s %(levelname)s %(levelno)s %(filename)s" \
+              "%(args) %(funcName)s %(lineno)d %(module)s %(name)s %(pathname)s %(process)d %(processName)s " \
+              "%(thread)d %(threadName)s %(msg) %(message)s %(exc_info)"
         handler = logging.FileHandler(self.logPath)
-        handler.setFormatter(logmatic.JsonFormatter(extra={"hostname": socket.gethostname()}))
+        handler.setFormatter(logmatic.JsonFormatter(fmt=fmt))
         self.logger.addHandler(handler)
 
-    def infoLogger(self, message):
-        self.logger.info(message)
-
-    def errorLogger(self, message, extra=None):
-        if extra is not None:
-            self.logger.error(message, exrta=extra, exc_info=True)
+    def criticalLogger(self, message, extraFields=None):
+        if extraFields is not None:
+            extraFields = self.merge_two_dicts(extraFields, self.noExtra)
+            self.logger.error(message, exrta=extraFields,)
         else:
-            self.logger.error(message, exc_info=True)
+            self.logger.critical(self, message, extra=self.noExtra,)
 
+    def errorLogger(self, message, extraFields=None):
+        if extraFields is not None:
+            extraFields = self.merge_two_dicts(extraFields, self.noExtra)
+            self.logger.error(message, exc_info=True, extra=extraFields)
+        else:
+            self.logger.error(message, exc_info=True, extra=self.noExtra)
 
-spl = integration("SePollLogRythemEventData", "D:/SwimlanePython/Production/logs/", "config.json", "D:/SwimlanePython/swimlane_python_logger/swimlane_python_logger/")
-spl.errorLogger('test')
+    def warningLogger(self, message, extraFields=None):
+        if extraFields is not None:
+            extraFields = self.merge_two_dicts(extraFields, self.noExtra)
+            self.logger.error(message, exrta=extraFields,)
+        else:
+            self.logger.warning(message, extra=self.noExtra,)
+
+    def infoLogger(self, message, extraFields=None):
+        if extraFields is not None:
+            extraFields = self.merge_two_dicts(extraFields, self.noExtra)
+            self.logger.error(message, exrta=extraFields,)
+        else:
+            self.logger.info(message, extra=self.noExtra,)
+
+    def debugLogger(self, message, extraFields=None):
+        if extraFields is not None:
+            extraFields = self.merge_two_dicts(extraFields, self.noExtra)
+            self.logger.error(message, exrta=extraFields,)
+        else:
+            self.logger.debug(message, extra=self.noExtra,)
